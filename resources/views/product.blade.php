@@ -1,46 +1,52 @@
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+
     <title>Gestión de Productos</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-SgOJa3DmI69IUzQ2PVdRZhwQ+dy64/BUtbMJw1MZ8t5HZApcHrRKUc4W0kG879m7" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap4.min.css">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <style>
+    </style>
 </head>
 
 <body>
-    
     <div class="container mt-4">
         <h2 class="mb-4">Lista de Productos</h2>
-        <table class="table">
+        
+       
+        <div class="table-loading">
+            <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Cargando tabla...</span>
+            </div>
+            <p class="mt-2">Cargando tabla de productos...</p>
+        </div>
+
+        <table class="table" id="productosTable">
             <thead>
                 <tr>
-                    <th scope="col">Nombre</th>
-                    <th scope="col">Precio</th>
-                    <th scope="col">Descripción</th>
-                    <th scope="col">Acciones</th>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Descripción</th>
+                    <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($productos as $producto)
                     <tr>
                         <td><strong>{{ $producto->name }}</strong></td>
-                        <td>Precio: ${{ $producto->precio }}</td>
+                        <td>${{ $producto->precio }}</td>
                         <td>{{ $producto->descripcion }}</td>
                         <td>
-                            <button class="btn btn-primary btn-edit" data-id="{{ $producto->id }}">
-                                Editar
-                            </button>
-                            <form action="{{ route('productos.eliminar', $producto->id) }}" method="POST"
-                                style="display:inline;">
+                            <button class="btn btn-primary btn-sm btn-action btn-edit" data-id="{{ $producto->id }}">Editar</button>
+                            <form action="{{ route('productos.eliminar', $producto->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Eliminar</button>
+                                <button type="submit" class="btn btn-danger btn-sm btn-action">Eliminar</button>
                             </form>
                         </td>
                     </tr>
@@ -74,15 +80,22 @@
     </div>
 
     @include('components.edit-modal')
-
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-k6d4wzSIapyDyv1kpU366/PK5hCdSbCRGRCMv+eplOQJWyd1fbcAu9OCUj5zNLiq" crossorigin="anonymous">
-    </script>
-
+    
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
     <script src="{{ asset('js/productos.js') }}"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $(document).on('init.dt', function() {
+                $('.table-loading').hide();
+            });
+        });
+    </script>
 </body>
-
 </html>

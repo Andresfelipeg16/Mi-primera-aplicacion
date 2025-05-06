@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Productos;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class ProductosController extends Controller
 {
@@ -49,7 +50,7 @@ class ProductosController extends Controller
         ]);
 
         $producto = Productos::findOrFail($id);
-        
+
         $producto->update([
             'name' => $request->nombre,
             'precio' => (int) $request->precio,
